@@ -30,6 +30,9 @@ class GameObject {
         void onCollision(const GameObject& other, Direction direction) = 0;
         // invoked by the game engine to advance state
         void advanceState(Game &game) = 0;
+        // right now events are just keypresses, but it would be good to
+        // handle all sorts of events
+        void onInputEvent(int event) = 0;
 };
 
 template <int ROWS, int COLS>
@@ -40,6 +43,7 @@ class GameBoard : public GameObject {
         }
 };
 
+// The game engine.  You shouldn't have to modify this
 class Game {
     public:
         // The main game engine.
