@@ -27,10 +27,9 @@ class GameObject {
         time_t nextaction;
         int xPos, yPos;
         // invoked by the game engine when we collide with another GameObject
-        void (*onCollision)(const GameObject& other, Direction direction);
-};
-
-class GamePiece : public GameObject {
+        void onCollision(const GameObject& other, Direction direction) = 0;
+        // invoked by the game engine to advance state
+        void advanceState(Game &game) = 0;
 };
 
 template <int ROWS, int COLS>
@@ -39,9 +38,6 @@ class GameBoard : public GameObject {
         GameBoard() {
             bitmap.resize(ROWS * COLS);
         }
-        // returns all objects that are adjacent in the given direction
-        // may return a zero-length vector
-        const std::vector<GameObject> adjacentObjectsInDirection(Direction direction);
 };
 
 class Game {
@@ -51,7 +47,13 @@ class Game {
         Game() : currentState(INITIAL) {
         }
         const GameState gameState() const { return _currentState; }
+        bool setGameState(GameState newState);
+        bool addGameObject(GameObject& object);
+        bool removeGameObject(GameObject& object);
+        // returns all objects that are adjacent in the given direction
+        // may return a zero-length vector
+        const std::vector<GameObject> adjacentObjectsInDirection(Direction direction);
     private:
-        GameBoard _gameBoard;
         GameState _currentState;
+        std::vector<GameObject> _gameObjects;
 };
