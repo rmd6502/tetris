@@ -8,9 +8,17 @@ typedef enum {
     DYING,
 } GameState;
 
+typedef enum {
+    TOP,
+    BOTTOM,
+    LEFT,
+    RIGHT
+} Direction;
+
 struct Pixel {
     unsigned char r,g,b;
     Pixel() : r(0), g(0), b(0) {}
+    Pixel(unsigned char r, unsigned char g, unsigned char b) : r(r), g(g), b(b) {}
 };
 
 class GameObject {
@@ -19,7 +27,7 @@ class GameObject {
         time_t nextaction;
         int xPos, yPos;
         // invoked by the game engine when we collide with another GameObject
-        void (*onCollision)(const GameObject& other);
+        void (*onCollision)(const GameObject& other, Direction direction);
 };
 
 class GamePiece : public GameObject {
@@ -31,6 +39,9 @@ class GameBoard : public GameObject {
         GameBoard() {
             bitmap.resize(ROWS * COLS);
         }
+        // returns all objects that are adjacent in the given direction
+        // may return a zero-length vector
+        const std::vector<GameObject> adjacentObjectsInDirection(Direction direction);
 };
 
 class Game {
@@ -42,6 +53,5 @@ class Game {
         const GameState gameState() const { return _currentState; }
     private:
         GameBoard _gameBoard;
-        GamePiece _gamePiece;
         GameState _currentState;
 };
