@@ -50,6 +50,8 @@ struct TetrisPieceSpec {
 struct TetrisBoard : public GameBoard<30,60> {
     // The piece currently dropping
     TetrisPiece piece;
+    // copies the bitmap of the current piece to the board bitmap
+    void addPiece();
 };
 
 struct TetrisPiece : public GamePiece {

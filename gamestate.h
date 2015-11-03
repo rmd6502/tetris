@@ -1,5 +1,7 @@
 #include <vector>
 
+#include "inputEvent.h"
+
 typedef enum {
     INITIAL,
     IDLE,
@@ -27,12 +29,12 @@ class GameObject {
         time_t nextaction;
         int xPos, yPos;
         // invoked by the game engine when we collide with another GameObject
-        void onCollision(const GameObject& other, Direction direction) = 0;
+        virtual void onCollision(const GameObject& other, Direction direction) = 0;
         // invoked by the game engine to advance state
-        void advanceState(Game &game) = 0;
+        virtual void advanceState(Game &game) = 0;
         // right now events are just keypresses, but it would be good to
         // handle all sorts of events
-        void onInputEvent(int event) = 0;
+        virtual void onInputEvent(const InputEvent& event) = 0;
 };
 
 template <int ROWS, int COLS>
