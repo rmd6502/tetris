@@ -29,12 +29,16 @@ class GameObject {
         time_t nextaction;
         int xPos, yPos;
         // invoked by the game engine when we collide with another GameObject
-        virtual void onCollision(const GameObject& other, Direction direction) = 0;
+        virtual void onCollision(Game& game, const GameObject& other) = 0;
         // invoked by the game engine to advance state
         virtual void advanceState(Game &game) = 0;
         // right now events are just keypresses, but it would be good to
         // handle all sorts of events
-        virtual void onInputEvent(const InputEvent& event) = 0;
+        virtual void onInputEvent(Game& game, const InputEvent& event) = 0;
+        // when one GameObject is drawn adjacent to another
+        virtual void onAdjacent(Game& game, const GameObject& other, Direction direction) = 0;
+        // actions when game state changes
+        virtual void onGameStateChange(Game& game, GameState newState);
 };
 
 template <int ROWS, int COLS>
@@ -56,9 +60,6 @@ class Game {
         bool setGameState(GameState newState);
         bool addGameObject(GameObject& object);
         bool removeGameObject(GameObject& object);
-        // returns all objects that are adjacent in the given direction
-        // may return a zero-length vector
-        const std::vector<GameObject> adjacentObjectsInDirection(Direction direction);
     private:
         GameState _currentState;
         std::vector<GameObject> _gameObjects;
